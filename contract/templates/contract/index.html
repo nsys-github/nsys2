@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}見積{% endblock %}
+
+{% block breadcrumb %}見積{% endblock %}
+
+{% block content %}
+        <table class="table">
+          <thead class="thead-inverse">
+              <tr>
+                <th>見積ID</th>
+                <th>契約区分</th>
+                <th>件名</th>
+                <th>契約開始日</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% if quotation_list %}
+                    {% for q in quotation_list %}
+                    <tr>
+                      <td>
+                          <a href="/contract/{{ q.t_quotation_id }}/quotation/">
+                              {{ q.t_quotation_id|stringformat:"i" }}</a>
+                      </td>
+                      <td class="align-middle">{{ q.contract_type }}</td>
+                      <td class="align-middle">{{ q.title }}</td>
+                      <td>{{ q.contract_date_from|stringformat:"s" }}</td>
+                    </tr>
+                  {% endfor %}
+              {% else %}
+              <tr>
+                <td colspan=4><p>見積レコードが見つかりませんでした。</p></td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+{% endblock %}

@@ -133,7 +133,7 @@ class t_staff(models.Model):
     oname_k = models.CharField(db_column="oname_k", verbose_name="旧姓カナ", max_length=90, null=True, blank=True, )
     oname_e = models.CharField(db_column="oname_e", verbose_name="旧姓英字", max_length=30, null=True, blank=True, )
     mail = models.EmailField(db_column="mail", verbose_name="メールアドレス", max_length=254, null=False, blank=False, )
-    #authuser_id = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, db_column="authuser_id", verbose_name="NSYSユーザーID", null=False, blank=False, )
+    authuser_id = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, db_column="authuser_id", verbose_name="NSYSユーザーID", null=False, blank=False, default=1)
     slack_id = models.CharField(db_column="slack_id", verbose_name="slackID", max_length=100, null=True, blank=True, )
     image_filename = models.FileField(upload_to='uploads/', db_column="image_filename", verbose_name="顔写真パス", null=False, blank=True, )
     gender = models.CharField(db_column="gender", verbose_name="性別", max_length=1, null=False, blank=False, choices=GENDER_CHOICES, )

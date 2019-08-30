@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}見積{% endblock %}
+
+{% block breadcrumb %}見積{% endblock %}
+
+{% block content %}
+ <table border=0 cellpadding=0 cellspacing=0 width=680 style='border-collapse:
+  collapse;table-layout:fixed;background:url({% static "images/contract/Nuri社印.png" %}) no-repeat right center'>
+  <col width=350>
+  <col width=80>
+  <col width=250>
+ <tr height=32>
+  <td colspan=3 height=32 style='text-align:center'><font class="font1">　見　積　書　</font></td>
+ </tr>
+ <tr height=30>
+  <td colspan=3><font class="font2">{{ quotation.t_company_id }}    御中</font></td>
+  </tr>
+ <tr height=24>
+   <td colspan=3 style='text-align:right'><font class="font3">（見積番号）{{ quotation.customer_quotation_no }}</font></td>
+ </tr>
+ <tr height=40>
+   <td colspan=3  style='text-align:right;vertical-align:top'><font class="font3">（発行日）{{ parm.p_issue_date }}</font></td>
+ </tr>
+
+ <tr height=20>
+  <td rowspan=5>　</td>
+  <td><font class="font3">(住所)</font></td>
+  <td><font class="font3">
+      {{ parm.p_my_address1 }}
+  </font></td>
+ </tr>
+ <tr height=20>
+  <td><font class="font3">　</font></td>
+  <td><font class="font3">{{ parm.p_my_address2 }}</font></td>
+ </tr>
+ <tr height=20>
+  <td><font class="font3">(会社名)</font></td>
+  <td><font class="font3">{{ quotation.my_company_id }}</font></td>
+ </tr>
+ <tr height=20>
+  <td><font class="font3">(担当者)</font></td>
+  <td><font class="font3">{{ parm.p_my_full_name }}</font></td>
+ </tr>
+ <tr height=20>
+  <td><font class="font3">(TEL)</font></td>
+  <td><font class="font3">{{ parm.p_my_tel_fax }}</font></td>
+ </tr>
+ <tr height=20>
+  <td colspan=3><font class="font5">下記のとおり、お見積り申し上げます</font></td>
+</tr>
+<tr height=20>
+ <td colspan=3 style='text-align:center'><font class="font6">記</font></td>
+</tr>
+<tr height=20>
+  <td colspan=3 style='text-align:right'><font class="font7">（見積有効期限：{{ parm.p_valid_date }}）</font></td>
+ </tr>
+ </table>
+ <table border=1 cellpadding=0 cellspacing=0 width=680 style='border-collapse:
+  collapse;table-layout:fixed'>
+  <col width=30>
+  <col width=30>
+  <col width=30>
+  <col width=100>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+  <col width=40>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">1. 契約区分</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.get_acceptance_or_retention_display }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">2. 契約件名</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.title }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">3. 業務内容</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">
+{% for txt in parm.l_outline %}
+        {{ txt }}<br>
+{% endfor %}
+</font></td>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">4. 作業場所</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ parm.p_workplace }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">5. 期間</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ parm.p_contract_date_from }} ～ {{ parm.p_contract_date_to }}</font></td>
+</tr>
+ <tr height=83>
+  <td colspan=3 rowspan={{ parm.p_rownum }} class=xl90 style='border-bottom:.5pt solid black;
+  border-top:none'><font class="font8">6. 金額</font></td>
+  <td colspan=9 class=xl79 width=516 style='border-left:none;text-align:right'>
+  <font class="font31">金 {{ parm.p_contract_exclude_tax }}円[総額]</font><br>
+  <font class="font31">精算方法：{{ quotation.get_adjust_type_display }}</font><br>
+  <font class="font15">（消費税相当額は含まれておりません）</font></td>
+ </tr>
+ <tr height=10>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">摘要</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">数量</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">単価（円）</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">単位</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">金額（円）</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">下限</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">控除単価</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">上限</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">超過単価</font></td>
+ </tr>
+{% for qi in quotation.t_quotation_item_set.all %}
+<tr height=10>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:30pt'><font class="font10">{{ qi.t_staff_id.get_full_name }}
+      ({{ qi.t_staff_id.get_full_name_k}})</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:5pt'><font class="font10">{{ qi.man_month|stringformat:"i" }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ qi.unitprice_exclude_tax|stringformat:"i" }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:5pt'><font class="font10">人月</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ qi.contract_exclude_tax|stringformat:"i" }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ quotation.base_hour_min }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ qi.unit_prices_minus|stringformat:"i" }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ quotation.base_hour_max }}</font></td>
+  <td height=10 class=xl90 style='border-bottom:.5pt solid black; border-top:none;width:10pt'><font class="font10">{{ qi.unit_prices_plus|stringformat:"i" }}</font></td>
+ </tr>
+{% endfor %}
+<tr><td height=20 colspan=9 ></td></tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">7. 納入物</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.deliverables }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">8. 納期</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.check_condition }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">9. 実施責任者</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">
+      {{ quotation.my_company_id }}<br>
+      {{ parm.p_manager_name }}<br>
+      {{ parm.p_tel_fax }}<br>
+  </font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">10. 交通費等</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.get_expenses_payment_type_display }}</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">11. 再委託</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">{{ quotation.get_recommision_type_display }}
+ {% if quotation.recommision_type == "1" %}
+   (会社名:　{{ quotation.recommision_company_id }})
+ {% endif %}
+</font></td>
+</tr>
+<tr height=36>
+  <td colspan=3 class=xl81 style='border-right:.5pt solid black'><font class="font8">12. 摘要</font></td>
+  <td colspan=9 class=xl81 style='border-right:.5pt solid black;border-left:none'><font class="font9">
+      {% for txt in parm.l_notes_1 %}
+              {{ txt }}<br>
+      {% endfor %}
+  </font></td>
+</tr>
+
+</table>
+{% endblock %}

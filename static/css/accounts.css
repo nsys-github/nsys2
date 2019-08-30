@@ -1,0 +1,16 @@
+body {
+  background-image: url(../images/accounts/email-pattern.png);
+}
+
+.logo {
+  font-family: 'Meiryo UI', monospace;
+}
+
+.logo a {
+  color: rgba(0,0,0,.9);
+}
+
+.logo a:hover,
+.logo a:active {
+  text-decoration: none;
+}
