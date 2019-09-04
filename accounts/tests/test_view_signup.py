@@ -11,10 +11,10 @@ class SignUpTests(TestCase):
         url = reverse('accounts:signup')
         self.response = self.client.get(url)
 
-    def test_signup_status_code(self):
+    def test_status_code(self):
         self.assertEquals(self.response.status_code, 200)
 
-    def test_signup_url_resolves_signup_view(self):
+    def test_url_resolves(self):
         view = resolve('/accounts/signup/')
         self.assertEquals(view.func, signup)
 

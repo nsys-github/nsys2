@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.safestring import mark_safe
 
 from master_mainte.models import t_company, t_dept, t_manager, t_workplace, t_staff
 
@@ -175,6 +176,27 @@ class t_quotation(t_contract_common):
 
     def __str__(self):
         return self.t_company_id.company_name + " （" + str(self.contract_date_from.strftime("%Y/%m/%d")) + " - " + str(self.contract_date_to.strftime("%Y/%m/%d")) + ")"
+
+    def get_quotation_item_staff_name(self):
+        #count = self.t_quotation_item_id.count()
+        queryset = t_quotation_item.objects.filter(t_quotation_id=self.pk)
+        staff = [q.t_staff_id for q in queryset]
+        #pages = count / 20
+        #return math.ceil(pages)
+        st = ""
+        for d in staff:
+            print(d)
+            st += d.get_full_name() + "/ "
+        return st
+
+    def get_link_to_quotation(self):
+        #st = '<image src="%s" />' % obj.image
+        st = '<a href="/contract/%s/quotation/" class="btn btn-primary ml-2">見積書</a>'
+        return mark_safe(st  % self.pk)
+
+    get_quotation_item_staff_name.short_description = '対象者'
+    get_link_to_quotation.short_description = '処理'
+    #get_link_to_quotation.allow_tags = True
 
     t_quotation_id = models.AutoField(db_column="t_quotation_id", verbose_name="見積ID", primary_key=True, null=False, blank=False, editable=False, )
     customer_quotation_no = models.CharField(db_column="customer_quotation_no", verbose_name="客先見積書番号", max_length=50, null=True, blank=True, )

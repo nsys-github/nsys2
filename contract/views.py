@@ -2,7 +2,9 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from django.views.generic import ListView
 from .models import t_quotation, t_manager
 from datetime import datetime
 
@@ -13,6 +15,19 @@ WAREKI_START = {
    '平成': datetime(1989, 1, 8),
    '昭和': datetime(1926, 12, 25)
 }
+
+class TQuotationListView(ListView):
+    model = t_quotation
+    context_object_name = 'quotation_list'
+    template_name = 'contract/index.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data()
+
+    def get_queryset(self):
+        queryset = t_quotation.objects.all()
+        return queryset
 
 @login_required
 def index(request):

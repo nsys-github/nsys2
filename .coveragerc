@@ -1,0 +1,10 @@
+[run]
+source = .
+omit = */tests/*
+          */htmlcov/*
+plugins =
+    django_coverage_plugin
+
+[report]
+show_missing = True
+skip_covered = True

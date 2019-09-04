@@ -31,11 +31,13 @@ class TQuotationItemTable(admin.TabularInline):
 class TQuotation(admin.ModelAdmin):
 
     # 一覧項目
-    list_display = ('t_company_id', 'contract_date_from', 'contract_date_to')
+    list_display = ('t_company_id', 'contract_date_from', 'contract_date_to', 'get_quotation_item_staff_name', 'get_link_to_quotation')
     # 検索項目
     search_fields = ['t_company_id__company_name__icontains']
     list_filter = ['t_company_id']
 
+    save_as = True
+    
     #inlines
     inlines = [TQuotationItemTable]
 
