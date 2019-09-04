@@ -15,7 +15,7 @@ class SignUpTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_signup_url_resolves_signup_view(self):
-        view = resolve('/signup/')
+        view = resolve('/accounts/signup/')
         self.assertEquals(view.func, signup)
 
     def test_csrf(self):
@@ -23,17 +23,16 @@ class SignUpTests(TestCase):
 
     def test_contains_form(self):
         form = self.response.context.get('form')
-        self.assertIsInstance(form, UserCreationForm)
+        self.assertIsInstance(form, SignUpForm)
 
     def test_form_inputs(self):
         '''
         The view must contain five inputs: csrf, username, email,
         password1, password2
         '''
-        #self.assertContains(self.response, '<input', 5)
-        self.assertContains(self.response, '<input', 4)
+        self.assertContains(self.response, '<input', 5)
         self.assertContains(self.response, 'type="text"', 1)
-        #self.assertContains(self.response, 'type="email"', 1)
+        self.assertContains(self.response, 'type="email"', 1)
         self.assertContains(self.response, 'type="password"', 2)
 
 #サインアップ成功時のテスト
@@ -42,11 +41,12 @@ class SuccessfulSignUpTests(TestCase):
         url = reverse('accounts:signup')
         data = {
             'username': 'john',
+            'email': 'john@doe.com',
             'password1': 'abcdef123456',
             'password2': 'abcdef123456'
         }
         self.response = self.client.post(url, data)
-        self.home_url = reverse('contract:index')
+        self.home_url = reverse('accounts:home')
 
     def test_redirection(self):
         '''

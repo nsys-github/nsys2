@@ -136,3 +136,6 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = 'accounts:home'
 LOGOUT_REDIRECT_URL = 'accounts:home'
+
+#メールのバックエンドとしてコンソールバックエンドを指定
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
