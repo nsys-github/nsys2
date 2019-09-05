@@ -16,18 +16,18 @@ class t_contract_common(models.Model):
         abstract = True
 
     #選択肢
-    CONTRACT_TYPE_CHOICES = [ ('1', '新規'), ('2', '更新'), ]
+    ACCEPTANCE_OR_RETENTION_CHOICES = [ ('1', '新規'), ('2', '更新'), ]
     RECOMMISION_TYPE_CHOICES = [ ('0', '無し'), ('1', '有り'), ]
     TAX_TYPE_CHOICES = [ ('1', '税込'), ('2', '税別'), ]
     ROUNDING_TYPE_CHOICES = [ ('1', '四捨五入'), ('2', '切り捨て'), ('3', '切り上げ'), ]
-    ACCEPTANCE_OR_RETENTION_CHOICES = [
-                                                            ('1', '労働者派遣契約'),
-                                                            ('2', '業務委託契約'),
-                                                            ('3', '業務請負契約'),
-                                                            ('4', '準委任契約'),
-                                                            ('5', 'システム・エンジニアリング・サービス契約(SES)'),
-                                                            ('9', 'その他'),
-                                                            ]
+    CONTRACT_TYPE_CHOICES = [
+                                                ('1', '労働者派遣契約'),
+                                                ('2', '業務委託契約'),
+                                                ('3', '業務請負契約'),
+                                                ('4', '準委任契約'),
+                                                ('5', 'システム・エンジニアリング・サービス契約(SES)'),
+                                                ('9', 'その他'),
+                                                ]
     ADJUST_TYPE_CHOICES = [
                                             ('1', '不足時/超過時単価精算'),
                                             ('2', '均一単価精算'),
@@ -41,8 +41,8 @@ class t_contract_common(models.Model):
                                                             ('3', '交通費精算なし'),
                                                             ]
 
-    my_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="my_company_id", verbose_name="弊社ID", null=False, blank=False, default="1", related_name="%(app_label)s_%(class)s_related_my_company_id", )
-    t_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="t_company_id", verbose_name="客先会社ID", null=False, blank=False, related_name="%(app_label)s_%(class)s_related_t_company_id", )
+    my_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="my_company_id", verbose_name="弊社ID", null=False, blank=False, default="1", related_name="%(app_label)s_%(class)s_related_my_company_id", limit_choices_to={'company_type': "NV"},)
+    t_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="t_company_id", verbose_name="客先会社ID", null=False, blank=False, related_name="%(app_label)s_%(class)s_related_t_company_id", limit_choices_to={'company_type': "OT"},)
     contract_type = models.CharField(db_column="contract_type", verbose_name="契約区分", max_length=1, null=True, blank=True, default="1", choices=CONTRACT_TYPE_CHOICES, )
     acceptance_or_retention = models.CharField(db_column="acceptance_or_retention", verbose_name="新規更新区分", max_length=1, null=True, blank=True, default="1", choices=ACCEPTANCE_OR_RETENTION_CHOICES, )
     recommision_type = models.CharField(db_column="recommision_type", verbose_name="再委託_区分", max_length=1, null=True, blank=True, default="0", choices=RECOMMISION_TYPE_CHOICES, )
@@ -68,13 +68,13 @@ class t_contract_common(models.Model):
     t_workplace_id = models.ForeignKey(t_workplace, on_delete=models.PROTECT, db_column="t_workplace_id", verbose_name="就業場所ID", null=True, blank=True, related_name="%(app_label)s_%(class)s_related_t_workplace_id", )
     contract_date_from = models.DateField(db_column="contract_date_from", verbose_name="契約期間_開始日", null=False, blank=False, )
     contract_date_to = models.DateField(db_column="contract_date_to", verbose_name="契約期間_終了日", null=False, blank=False, )
-    man = models.DecimalField(db_column="man", verbose_name="契約人数", max_digits=7, decimal_places=3, null=True, blank=True, )
+    man = models.DecimalField(db_column="man", verbose_name="契約人数", max_digits=4, decimal_places=0, null=True, blank=True, )
     man_month = models.DecimalField(db_column="man_month", verbose_name="工数合計(人月)", max_digits=7, decimal_places=3, null=True, blank=True, )
     tax_type = models.CharField(db_column="tax_type", verbose_name="税区分", max_length=1, null=True, blank=True, default="2", choices=TAX_TYPE_CHOICES, )
     tax_rate = models.DecimalField(db_column="tax_rate", verbose_name="税率", max_digits=4, decimal_places=3, null=True, blank=True, )
-    contract_exclude_tax = models.DecimalField(db_column="contract_exclude_tax", verbose_name="契約額合計(税抜)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    contract_tax_amount = models.DecimalField(db_column="contract_tax_amount", verbose_name="契約額合計(税額)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    contract_amount = models.DecimalField(db_column="contract_amount", verbose_name="契約額合計(合計)", max_digits=13, decimal_places=3, null=True, blank=True, )
+    contract_exclude_tax = models.DecimalField(db_column="contract_exclude_tax", verbose_name="契約額合計(税抜)", max_digits=10, decimal_places=0, null=True, blank=True, )
+    contract_tax_amount = models.DecimalField(db_column="contract_tax_amount", verbose_name="契約額合計(税額)", max_digits=10, decimal_places=3, null=True, blank=True, )
+    contract_amount = models.DecimalField(db_column="contract_amount", verbose_name="契約額合計(合計)", max_digits=10, decimal_places=3, null=True, blank=True, )
     base_hour_min = models.DecimalField(db_column="base_hour_min", verbose_name="基準時間下限(時間)", max_digits=3, decimal_places=0, null=True, blank=True, )
     base_hour_max = models.DecimalField(db_column="base_hour_max", verbose_name="基準時間上限(時間)", max_digits=3, decimal_places=0, null=True, blank=True, )
     base_hour_text = models.CharField(db_column="base_hour_text", verbose_name="基準時間_テキスト", max_length=500, null=True, blank=True, )
@@ -150,12 +150,12 @@ class t_contract_item_common(models.Model):
     man_month = models.DecimalField(db_column="man_month", verbose_name="工数(人月)", max_digits=7, decimal_places=3, null=True, blank=True, )
     tax_type = models.CharField(db_column="tax_type", verbose_name="税区分", max_length=1, null=True, blank=True, choices=TAX_TYPE_CHOICES, )
     tax_rate = models.DecimalField(db_column="tax_rate", verbose_name="税率", max_digits=4, decimal_places=3, null=True, blank=True, )
-    unitprice_exclude_tax = models.DecimalField(db_column="unitprice_exclude_tax", verbose_name="契約単価(税抜)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    contract_exclude_tax = models.DecimalField(db_column="contract_exclude_tax", verbose_name="契約額(税抜)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    contract_tax_amount = models.DecimalField(db_column="contract_tax_amount", verbose_name="契約額(税額)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    contract_amount = models.DecimalField(db_column="contract_amount", verbose_name="契約額(合計)", max_digits=13, decimal_places=3, null=True, blank=True, )
-    unit_prices_minus = models.DecimalField(db_column="unit_prices_minus", verbose_name="精算単価_不足時", max_digits=13, decimal_places=3, null=True, blank=True, )
-    unit_prices_plus = models.DecimalField(db_column="unit_prices_plus", verbose_name="精算単価_超過時", max_digits=13, decimal_places=3, null=True, blank=True, )
+    unitprice_exclude_tax = models.DecimalField(db_column="unitprice_exclude_tax", verbose_name="契約単価(税抜)", max_digits=10, decimal_places=0, null=True, blank=True, )
+    contract_exclude_tax = models.DecimalField(db_column="contract_exclude_tax", verbose_name="契約額(税抜)", max_digits=10, decimal_places=0, null=True, blank=True, )
+    contract_tax_amount = models.DecimalField(db_column="contract_tax_amount", verbose_name="契約額(税額)", max_digits=10, decimal_places=3, null=True, blank=True, )
+    contract_amount = models.DecimalField(db_column="contract_amount", verbose_name="契約額(合計)", max_digits=10, decimal_places=3, null=True, blank=True, )
+    unit_prices_minus = models.DecimalField(db_column="unit_prices_minus", verbose_name="精算単価_不足時", max_digits=10, decimal_places=0, null=True, blank=True, )
+    unit_prices_plus = models.DecimalField(db_column="unit_prices_plus", verbose_name="精算単価_超過時", max_digits=10, decimal_places=0, null=True, blank=True, )
     notes = models.TextField(db_column="notes", verbose_name="備考", null=True, blank=True, )
     delete_flg = models.BooleanField(db_column="delete_flg", verbose_name="削除フラグ", null=False, blank=False, default=False, )
     ent_date = models.DateTimeField(db_column="ent_date", verbose_name="登録日時", null=False, blank=False, editable=False, )
@@ -185,13 +185,12 @@ class t_quotation(t_contract_common):
         #return math.ceil(pages)
         st = ""
         for d in staff:
-            print(d)
             st += d.get_full_name() + "/ "
         return st
 
     def get_link_to_quotation(self):
         #st = '<image src="%s" />' % obj.image
-        st = '<a href="/contract/%s/quotation/" class="btn btn-primary ml-2">見積書</a>'
+        st = '<a href="/contract/%s/quotation/" class="btn btn-primary ml-2" target=”_blank”>見積書</a>'
         return mark_safe(st  % self.pk)
 
     get_quotation_item_staff_name.short_description = '対象者'
@@ -212,8 +211,8 @@ class t_quotation_item(t_contract_item_common):
         verbose_name_plural = "見積内訳テーブル"
         ordering = ['t_staff_id']
 
-#    def __str__(self):
-#        return self.
+    def __str__(self):
+        return self.t_staff_id.get_full_name()
 
     t_quotation_item_id = models.AutoField(db_column="t_quotation_item_id", verbose_name="見積内訳ID", primary_key=True, null=False, blank=False, editable=False, )
     t_quotation_id = models.ForeignKey(t_quotation, on_delete=models.PROTECT, db_column="t_quotation_id", verbose_name="見積ID", null=False, blank=False, )

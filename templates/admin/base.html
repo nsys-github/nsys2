@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n static %}
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+
+
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {% endblock %}

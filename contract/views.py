@@ -48,7 +48,6 @@ def quotation(request, t_quotation_id):
     p_my_address2 = quotation.my_company_id.get_address2()
     p_my_company_name = quotation.my_company_id
 
-    print(p_my_company_name)
     p_my_full_name = quotation.my_company_id.get_full_name()
     p_my_tel_fax = quotation.my_company_id.get_tel_fax()
     p_valid_date = convert_to_wareki(quotation.valid_date)
@@ -56,7 +55,6 @@ def quotation(request, t_quotation_id):
     p_workplace = quotation.t_workplace_id.get_workplace_address()
     p_contract_date_from = convert_to_wareki(quotation.contract_date_from)
     p_contract_date_to = convert_to_wareki(quotation.contract_date_to)
-    p_contract_exclude_tax = '{:,}'.format(int(quotation.contract_exclude_tax)) #整数にしてから、数値カンマ区切り
     p_rownum = len(quotation.t_quotation_item_set.all()) +2 +1  #見出し2行、下に余白1行
     p_manager_name = quotation.my_manager_id.get_full_name()
     p_tel_fax = quotation.my_company_id.get_tel_fax()
@@ -73,7 +71,6 @@ def quotation(request, t_quotation_id):
                 'p_workplace': p_workplace,
                 'p_contract_date_from': p_contract_date_from,
                 'p_contract_date_to': p_contract_date_to,
-                'p_contract_exclude_tax': p_contract_exclude_tax,
                 'p_rownum': p_rownum,
                 'p_manager_name': p_manager_name,
                 'p_tel_fax': p_tel_fax,

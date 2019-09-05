@@ -277,10 +277,14 @@ class t_manager(models.Model):
         #フルネーム漢字
         return self.fname + " " + self.lname
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(t_company_id=t_company.object)
+
     get_full_name.short_description = '担当者名'
 
     t_manager_id = models.AutoField(db_column="t_manager_id", verbose_name="担当者ID", primary_key=True, null=False, blank=False, editable=False, )
-    t_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="t_company_id", verbose_name="会社ID", null=False, blank=False, limit_choices_to={'company_type': 'OT'},)
+    t_company_id = models.ForeignKey(t_company, on_delete=models.PROTECT, db_column="t_company_id", verbose_name="会社ID", null=False, blank=False,)
     t_dept_id = models.ForeignKey(t_dept, on_delete=models.PROTECT, db_column="t_dept_id", verbose_name="組織ID", null=False, blank=False, )
     position = models.CharField(db_column="position", verbose_name="担当者役職名", max_length=100, null=True, blank=True, )
     fname = models.CharField(db_column="fname", verbose_name="担当者姓", max_length=90, null=False, blank=False, )

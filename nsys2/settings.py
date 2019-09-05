@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,8 @@ LOGIN_URL = 'login'
 
 #メールのバックエンドとしてコンソールバックエンドを指定
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#humanize intcomma の桁数
+NUMBER_GROUPING = 3
+DECIMAL_SEPARATOR = '.'
+THOUSAND_SEPARATOR = ','

@@ -1,17 +1,29 @@
-{% load static %}<!DOCTYPE html>
-<html>
+{% load static %}
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
   <head>
     <meta charset="utf-8">
     <title>Nsys -- {% block title %}Title None{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/contract.css' %}">
-    {% block stylesheet %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}">
+    {% block extrastyle %}{% endblock %}
+    {% block responsive %}
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+        {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+    {% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
   </head>
-  <body>
+  {% load i18n %}
+
+  <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+    data-admin-utc-offset="{% now "Z" %}">
     {% block body %}
       <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
         <div class="container">
-          <a class="navbar-brand" href="{% url 'master_mainte:index' %}">マスタ</a>
+          <a class="navbar-brand" href="{% url 'admin:index' %}">マスタ</a>
           <a class="navbar-brand" href="{% url 'contract:index' %}">見積</a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,13 +53,37 @@
           </div>
         </div>
       </nav>
+
+      <!-- Container -->
       <div class="container">
+        {% if not is_popup %}
         <ol class="breadcrumb my-4">
           {% block breadcrumb %}
           {% endblock %}
         </ol>
-        {% block content %}
-        {% endblock %}
+        {% endif %}
+
+        {% block messages %}
+            {% if messages %}
+            <ul class="messagelist">{% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+            {% endif %}
+        {% endblock messages %}
+
+        <!-- Content -->
+        <div id="content" class="{% block coltype %}colM{% endblock %}">
+            {% block pretitle %}{% endblock %}
+            {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+            {% block content %}
+            {{ content }}
+            {% endblock %}
+            {% block sidebar %}{% endblock %}
+            <br class="clear">
+        </div>
+        <!-- END Content -->
+
+        {% block footer %}<div id="footer"></div>{% endblock %}
       </div>
     {% endblock body %}
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
