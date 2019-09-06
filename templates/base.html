@@ -5,9 +5,12 @@
   <head>
     <meta charset="utf-8">
     <title>Nsys -- {% block title %}Title None{% endblock %}</title>
+
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
     <link rel="stylesheet" href="{% static 'css/contract.css' %}">
     <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static 'admin/css/base.css' %}{% endblock %}">
+
     {% block extrastyle %}{% endblock %}
     {% block responsive %}
         <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -86,8 +89,5 @@
         {% block footer %}<div id="footer"></div>{% endblock %}
       </div>
     {% endblock body %}
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     </body>
 </html>

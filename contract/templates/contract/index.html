@@ -5,10 +5,29 @@
 {% block breadcrumb %}見積{% endblock %}
 
 {% block content %}
+     <h1>検索条件</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in test_form %}
+            <div class="form-group form-inline">
+                <label class="col-md-offset-2 col-md-3 control-label">{{ field.label }}:</label>
+                <div class="col-md-8">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input class="btn btn-success offset-md-8 col-md-3" type="submit" id="button" name="button" value="検索">
+    </form>
+
+
+    <h1>検索結果</h1>
+
+    <section class="post-list">
         <table class="table">
           <thead class="thead-inverse">
               <tr>
                 <th>契約区分</th>
+                <th>契約先社名</th>
                 <th>件名</th>
                 <th>契約開始日</th>
                 <th>対象者</th>
@@ -20,6 +39,7 @@
                     {% for q in quotation_list %}
                     <tr>
                       <td class="align-middle">{{ q.get_contract_type_display }}</td>
+                      <td class="align-middle">{{ q.t_company_id }}</td>
                       <td class="align-middle">{{ q.title }}</td>
                       <td>{{ q.contract_date_from|stringformat:"s" }}</td>
                       <td>{{ q.get_quotation_item_staff_name }}</td>
@@ -35,7 +55,7 @@
               {% endif %}
             </tbody>
           </table>
-
+        </section>
 {% include 'includes/pagination.html' %}
 
 {% endblock %}

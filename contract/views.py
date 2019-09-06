@@ -8,7 +8,9 @@ from django.views.generic import ListView
 from .models import t_quotation, t_manager
 from datetime import datetime
 
-
+#from django.views import generic
+from .forms import SearchForm
+from django.db.models import Q
 
 WAREKI_START = {
    '令和': datetime(2019, 5, 1),
@@ -28,6 +30,58 @@ class TQuotationListView(ListView):
     def get_queryset(self):
         queryset = t_quotation.objects.all()
         return queryset
+
+class  TQuotationListView2(ListView):
+    model = t_quotation
+    context_object_name = 'quotation_list'
+    template_name = 'contract/index.html'
+    paginate_by = 5
+
+    def post(self, request, *args, **kwargs):
+        form_value = [
+            self.request.POST.get('t_company_id', None),
+            self.request.POST.get('contract_date_from', None),
+        ]
+        request.session['form_value'] = form_value
+        # 検索時にページネーションに関連したエラーを防ぐ
+        self.request.GET = self.request.GET.copy()
+        self.request.GET.clear()
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # sessionに値がある場合、その値をセットする。（ページングしてもform値が変わらないように）
+        t_company_id = ''
+        contract_date_from = ''
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            t_company_id = form_value[0]
+            contract_date_from = form_value[1]
+        default_data = {'t_company_id': t_company_id,  # タイトル
+                        'contract_date_from': contract_date_from,  # 内容
+                        }
+        test_form = SearchForm(initial=default_data) # 検索フォーム
+        context['test_form'] = test_form
+        return context
+
+    def get_queryset(self):
+        # sessionに値がある場合、その値でクエリ発行する。
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            t_company_id = form_value[0]
+            contract_date_from = form_value[1]
+            # 検索条件
+            condition_t_company_id = Q()
+            condition_contract_date_from = Q()
+            if len(t_company_id) != 0 and t_company_id[0]:
+                condition_t_company_id = Q(t_company_id__company_name__icontains=t_company_id)
+            if len(contract_date_from) != 0 and contract_date_from[0]:
+                condition_contract_date_from = Q(contract_date_from__icontains=contract_date_from)
+            return t_quotation.objects.select_related().filter(condition_t_company_id & condition_contract_date_from)
+        else:
+            # 何も返さない
+            return t_quotation.objects.none()
+
 
 @login_required
 def index(request):
