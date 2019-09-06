@@ -20,7 +20,7 @@ class TQuotationListView(ListView):
     model = t_quotation
     context_object_name = 'quotation_list'
     template_name = 'contract/index.html'
-    paginate_by = 3
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         return super().get_context_data()
